@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=shift_jis">
+<title>顧客名簿</title>
+<script type="text/javascript" src="xmlhttp.js"></script>
+<script type="text/javascript">
+<!--
+var httpObj;
+//var httpObj = new XMLHttpRequest();
+function displayData()
+{
+	//alert("httpObj.readyState=" + httpObj.readyState + " : httpObj.status=" + httpObj.status);
+	if ((httpObj.readyState == 4) && (httpObj.status == 200))
+	{
+
+		document.getElementById("result").innerHTML = parseJSON(httpObj.responseText);
+		alert("httpObj.responseText = " + parseJSON(httpObj.responseText));
+	}
+}
+
+function loadDataFile(fName)
+{
+	//alert(fName);
+//	httpObj = new XMLHttpRequest();
+	httpObj = createXMLHttpRequest(displayData);
+	if (httpObj)
+	{
+		httpObj.open("GET",fName,true);
+		httpObj.send(null);
+	}
+}
+
+function parseJSON(jsData)
+{
+alert(jsData);
+var data = eval("("+jsData+")");
+//alert(data.list[0].name);
+//alert("data.list.length = " + data.list.length);
+var dispText = "";
+var resultData = "<table border=1>";
+for (var i = 0; i < data.list.length; i++) {
+	var account = data.list[i];
+	var oneData =
+		"<tr><td nowrap>"
+		+ account.name_jp + "</td>"
+		+ "<td>" + account.sex + "<td>"
+		+ account.age 
+		+ "</td>" 
+		+ "<td>" + account.pref + "</td>"
+		+ "<td>" + account.address
+		+ "</td><td>"
+		//+ account.cell_phone 
+		//+ "</td><td>" 
+		+ account.company + "</td><td>"
+		+ account.memo + "</td>"
+		//+ "<td>" + account.phone + "</td>"
+		+ "</tr>";
+		resultData += oneData;
+}
+return resultData + "</table>";
+}
+// --></script>
+</head>
+<body>
+<h1>顧客名簿</h1>
+<p>JSONのデータを読み込み表示します</p>
+<form name="ajaxForm">
+<input type="button" value="顧客名簿を読み込み" onClick="loadDataFile('servlet/SearchServlet')"><br>
+</form>
+<div id="result"></div>
+</body>
+</html>
